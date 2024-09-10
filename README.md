@@ -1,5 +1,15 @@
 # Personalized Recipe Recommender System Using Collaborative Filtering
 
+## Files in this Repository
+
+- **[README.md](./README.md)**: This file provides an overview of the project, including installation instructions, usage, and project details.
+
+- **[RecipeDashboard.Rmd](./RecipeDashboard.Rmd)**: R Markdown file containing the code for the Shiny app interface. It loads the saved recommender model (`ibcf_recommender_model_k95.rds`) and runs the server to provide a user-friendly dashboard for recipe recommendations.
+
+- **[ibcf_recommender_model_k95.rds](./ibcf_recommender_model_k95.rds)**: The saved RDS file containing the optimized Item-Based Collaborative Filtering (IBCF) recommender model trained on user clickstream data.
+
+- **[project.Rmd](./project.Rmd)**: R Markdown file where different recommender algorithms (Item-Based Collaborative Filtering, Singular Value Decomposition, and User-Based Collaborative Filtering) are built, tested, and tuned with various parameters. This file focuses on finding the best-performing algorithm by optimizing hyperparameters using techniques like grid search.
+
 ## Table of Contents
 - [Overview](#overview)
 - [Features](#features)
