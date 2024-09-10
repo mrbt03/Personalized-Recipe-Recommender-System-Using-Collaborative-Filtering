@@ -1,0 +1,92 @@
+---
+title: "Recipe Dashboard"
+output: html_notebook
+---
+
+```{r}
+rm(list=ls())
+setwd("C:/Users/marko/Contacts/Desktop/IEMS 308")
+```
+
+```{r}
+library(shiny)
+library(recommenderlab)
+library(Matrix)
+library(dplyr)us
+library(tidyr)  
+library(tidytext) 
+
+```
+
+Load recommended model, and recipe data
+```{r}
+recommender_model <- readRDS("ibcf_recommender_model_k95.rds")
+
+recipes <- read.table("recipesamp.txt", header = TRUE, sep = "\t", stringsAsFactors = FALSE, fill = TRUE, quote = "")
+
+recipes <- recipes %>%
+  mutate(across(everything(), ~ gsub("^\\s+|\\s+$", "", iconv(., "UTF-8", "ASCII", sub=""))))
+```
+
+UI and server logic
+```{r}
+# Define UI for the application
+ui <- fluidPage(
+    titlePanel("Recipe Recommender System"),
+    sidebarLayout(
+        sidebarPanel(
+            textInput("user_id", "Enter your User ID:", value = "1"),
+            actionButton("get_recommendations", "Get Recommendations")
+        ),
+        mainPanel(
+            h3("Recommended Recipes:"),
+            tableOutput("recommendations")
+        )
+    )
+)
+
+# Define server logic for the application
+server <- function(input, output, session) {
+    # Load or define the realRatingMatrix (r) within the server
+    m <- read.csv("clicksamp.csv") %>% mutate(logcount = log(count))
+    r <- as(cast_sparse(m, id, recipeid, logcount), "realRatingMatrix")
+
+    # Generate recommendations when the button is clicked
+    observeEvent(input$get_recommendations, {
+        user_id <- input$user_id
+        
+        # Ensure user_id is numeric
+        user_id <- as.numeric(user_id)
+        
+        # Check if user_id is valid in the dataset
+        if (!is.na(user_id) && user_id %in% rownames(r)) {
+            # Create a realRatingMatrix for the new user
+            newdata <- r[as.character(user_id), , drop = FALSE]
+
+            recommended_recipes <- predict(recommender_model, newdata, n = 5)
+            
+            recommended_recipes_list <- as(recommended_recipes, "list")[[1]]
+            
+            # Map recipe IDs to recipe details
+            recommended_details <- recipes %>%
+                filter(recipeid %in% recommended_recipes_list) %>%
+                select(recipename, difficulty, cookmethod, course)
+            
+            output$recommendations <- renderTable({
+                recommended_details
+            })
+        } else {
+            output$recommendations <- renderTable({
+                data.frame(Recipe = "Invalid User ID")
+            })
+        }
+    })
+}
+```
+
+Run application
+```{r}
+# Run the application
+shinyApp(ui = ui, server = server)
+```
+
