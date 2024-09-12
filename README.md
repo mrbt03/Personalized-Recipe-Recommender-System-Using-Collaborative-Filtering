@@ -8,7 +8,7 @@
 
 - **[ibcf_recommender_model_k95.rds](./ibcf_recommender_model_k95.rds)**: The saved RDS file containing the optimized Item-Based Collaborative Filtering (IBCF) recommender model trained on user clickstream data.
 
-- **[project.Rmd](https://github.com/mrbt03/Recipe-Recommender-Evaluation)**: R Markdown file where different recommender algorithms (Item-Based Collaborative Filtering, Singular Value Decomposition, and User-Based Collaborative Filtering) are built, tested, and tuned with various parameters. This file focuses on finding the best-performing algorithm by optimizing hyperparameters using techniques like grid search.
+- **[project.Rmd](https://github.com/mrbt03/Recipe-Recommender-Evaluation)**: R Markdown file that builds, tests, and tunes various recommender algorithms, including Item-Based Collaborative Filtering, Singular Value Decomposition, and User-Based Collaborative Filtering. It focuses on identifying the best-performing algorithm by optimizing hyperparameters through techniques like grid search.
 
 ## Table of Contents
 - [Overview](#overview)
